@@ -1,6 +1,6 @@
 """端到端 Demo（Phase 8）—— 指令第十六、十七节要的那条完整链路。
 
-    python -m argos.demo                     # 生成 examples/sim_trace/ + 文档/demo_trace.md
+    python -m argos.demo                     # 生成 examples/sim_trace/
     python -m argos.demo --seed 7 --out-dir examples/sim_trace
 
 故事（纯仿真）：
@@ -110,7 +110,7 @@ def render_markdown(trace: dict) -> str:
     lines.append("# ArgOS Demo Trace —— 失败 → 反思 → 换路线")
     lines.append("")
     lines.append("> 由 `python -m argos.demo` 生成。**纯仿真**，不接任何硬件。")
-    lines.append("> ⚠️ **生成物，勿手改** —— 与 `文档/BENCHMARK.md` / `文档/SWEEP.md` 同一套路：")
+    lines.append("> ⚠️ **生成物，勿手改**：")
     lines.append("> 要改数据就改 `argos/demo.py`，再跑 `python -m argos.demo` 重生成。")
     lines.append(f"> seed = `{trace['meta']['seed']}`；链路：")
     lines.append(">")
@@ -149,7 +149,7 @@ def render_markdown(trace: dict) -> str:
     lines.append("")
     lines.append("```bash")
     lines.append("python -m argos.demo                                  # 生成本文件 + JSON trace")
-    lines.append("python -m argos.benchmark all --out 文档/BENCHMARK.md  # 各组配置对比（组数见生成文件的表头）")
+    lines.append("python -m argos.benchmark all --out examples/benchmark.md  # 各组配置对比")
     lines.append("python -m argos.benchmark run --scenario transient_jam_latency_none --config memory_only")
     lines.append("```")
     return "\n".join(lines)
@@ -160,7 +160,7 @@ def main(argv=None) -> int:
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--episodes", type=int, default=3)
     p.add_argument("--out-dir", default="examples/sim_trace")
-    p.add_argument("--md", default="文档/demo_trace.md")
+    p.add_argument("--md", default="examples/sim_trace/demo_trace.md")
     args = p.parse_args(argv)
 
     trace = run_demo(seed=args.seed, episodes=args.episodes)

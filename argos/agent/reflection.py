@@ -26,7 +26,7 @@ __all__ = ["Reflector", "ROUTE_REASONS"]
 
 #: 只有这些失败原因意味着"**换条路能解决**"，才允许生成"避开某条路线"的 Lesson。
 #: 反例：低电量（BATTERY_LOW）时路线没问题，学成"北线不能走"就是**错误因果**
-#: —— 这是本轮 benchmark 实测暴露出来的限制，见 `文档/BENCHMARK.md`。
+#: —— 这是 benchmark 实测暴露出来的限制。
 ROUTE_REASONS = frozenset({FailReason.OBSTACLE_BLOCKED, FailReason.PATH_INVALID})
 
 #: 反证一条教训需要**连续**成功复核几次（D-02）。

@@ -11,7 +11,7 @@
 $ python -m argos.run --backend go2
 backend=go2  goal='去充电站'  seed=42  episodes=3
 错误：没有名为 'go2' 的 backend。当前可用：simulator。
-  说明：'go2' 尚未实现 —— 本项目**当前没有真实机器人硬件**，也不会写一个假的真机 backend 来冒充完成。规划见 文档/ROADMAP.md。
+  说明：'go2' 尚未实现 —— 本项目**当前没有真实机器人硬件**，也不会写一个假的真机 backend 来冒充完成。
 $ echo $?
 2
 ```
@@ -29,7 +29,7 @@ argos/backends/go2/
 └── errors.py        ← 厂商错误码 → FailReason 的映射表
 ```
 
-## 四条硬约束（详见 `文档/FUTURE_ROBOT_BACKEND.md`）
+## 四条硬约束
 
 1. **只依赖** `argos.agent.interfaces` + 厂商 SDK。不许 import 入口层、不许 import `argos.sim.*`。
 2. **复用同一个 `ActionGate`**：可以加严（更小边界 / 更低速度上限），**不许放宽或绕过**。

@@ -10,7 +10,7 @@ ArgOS 把"游戏 NPC 大脑"移植到了机器狗身上：文本指令 → 编�
 - ✅ SIM-first Embodied Agent Runtime 已跑通闭环：Simulator 是一等公民，失败可注入、反思会改下一次计划（见下节）
 - ✅ 真机执行器（高层 SportClient + 闭环控制器 + 断链看门狗）代码与单测就绪
 - ✅ Web Console（观察 + 控制层）可用，只观测与下发指令、不决策
-- ❌ **尚未在真机上运行**——真机联调清单见 `文档/真机安全清单.md`
+- ❌ **尚未在真机上运行**
 - 部分代码与文档由 AI 工具辅助编写，实测数据全部来自真实运行
 
 ## 系统长什么样
@@ -57,8 +57,7 @@ User Goal → Brain → Planner → ActionProposal → SafetyGate → Executor
   `WATCHDOG_TRIGGERED`；六档延迟剖面（50ms~1s）+ 丢包，全部走**逻辑时钟**，因此同 seed 仍可复现。
 - **有 benchmark，而且会把负结果写出来**：`python -m argos.benchmark all` 跑 35 场景 ×
   6 组配置 × 3 个 seed（= 630 组），输出成功率 / 重试 / 动作数 / 耗时 / 失败数对比表
-  （具体场景数与臂数以 `文档/BENCHMARK.md` 表头为准，那里是生成物）。
-  当前实测的诚实结论（见 `文档/BENCHMARK.md`）：**「反思只写不读」与完全不做反思逐位相同（零价值）**；
+  当前实测的诚实结论：**「反思只写不读」与完全不做反思逐位相同（零价值）**；
   只记忆不反思学得更快但**会把一次偶发当成永久教训、从此绕远路**。
 - **一条命令跑完整系统**：`python -m argos.run --backend simulator --goal "去充电站"`。
   换身体只换 `--backend`（`--backend go2` 会**如实报未实现**，绝不写假真机代码冒充）。
@@ -68,12 +67,12 @@ User Goal → Brain → Planner → ActionProposal → SafetyGate → Executor
   **传感器读不到时闸门 fail-closed 拒绝移动**，宁可不动也不凭猜的坐标走；
   `argos/input/`（`--input speech --say "麻烦帮我去一下充电站吧"`）是**规则抽取的口语模拟**，
   **不是语音识别**；听不懂会明确报错，**绝不猜一个目标去执行**。
-- **可解释**：`python -m argos.demo` 导出逐步 JSON trace 与 `文档/demo_trace.md`，
+- **可解释**：`python -m argos.demo` 导出逐步 JSON trace，
   没有的字段写 `null`，不编造。
 - ⚠️ **全部是仿真**：不接硬件、不伪造 real executor。真机代码（`real_sport.py` / `dds_entity.py` /
   `sim/mujoco.py`）已冻结，仅作为未来 RobotBackend 的素材保留。
 
-完整审计与缺口清单见 `文档/archive/SIM_FIRST_AUDIT.md`（历史快照），实验数据见 `文档/BENCHMARK.md`，逐步 trace 见 `文档/demo_trace.md`。
+
 
 ## 性格（可选 LLM）
 
@@ -128,18 +127,14 @@ python -m argos.web.gateway --executor sim     # 后端 127.0.0.1:8766
 cd console && npm install && npm run dev       # 前端 localhost:5173
 ```
 
-用法、设计与数据来源盘点见 `文档/Console_使用说明.md`。
-
 ## 测试
 
 ```bash
 python -m pytest tests -q -p no:cacheprovider
-# 351 passed, 3 skipped        ← 裸环境实测（2026-09-20）；数字只认 文档/测试基线.md
+# 351 passed, 3 skipped        ← 裸环境实测（2026-09-20）
 # 装了宇树上游 SDK（unitree_sdk2py，见 requirements.txt 第 4 节）后为 354 passed, 0 skipped
 # 注：test_dds_sim / test_dds_walk / test_dds_closed_loop 三例跑真实物理仿真 + DDS 闭环，
-#     对机器负载敏感（走位与关节收敛有随机性），负载高时会失败 —— 与大脑层改动无关，
-#     排查记录见 商议/反思层有效性探测_20260905.md（本地，不入库） §5.5
-# 逐文件用例数只在 文档/测试基线.md 维护（单一信息源）
+#     对机器负载敏感（走位与关节收敛有随机性），负载高时会失败 —— 与大脑层改动无关
 ```
 
 ## 本项目的部分代码/思路来源于以下开源项目，感谢开源社区的贡献，让我们能够站在巨人的肩膀上。
@@ -161,22 +156,6 @@ python -m pytest tests -q -p no:cacheprovider
 - **Eclipse Foundation**：CycloneDDS
 - **OpenClaw 社区**：技能规范
 - **Pollen Robotics / Hugging Face**：Microduck 开源的板端运行时设计——健康门与只读 last-value 缓存的思路参考（软件栈 Apache-2.0 开源，硬件设计不开源）
-
-## 文档
-
-> **完整索引与维护规则见 `文档/README.md`**（14 篇正文档分四组 + 4 篇历史归档）。
-> 那里是**唯一索引**，本文不复制第二份（复制必然漂移）。
-
-最常被问到的几篇：
-
-| 想知道 | 读哪份 |
-|---|---|
-| **测试数字（唯一权威源）** | `文档/测试基线.md` |
-| 新 runtime 的结构（分层 / 依赖方向 / 扩展点） | `文档/ARCHITECTURE.md` |
-| 术语表（同一概念只定义一次） | `文档/GLOSSARY.md` |
-| Reflection 实测（6 组配置 × 35 场景 × 3 seed = 630 组） | `文档/BENCHMARK.md` |
-| 还没做完的（逐条列清） | `文档/ROADMAP.md` |
-| 上狗前必读（物理与人） | `文档/真机安全清单.md` |
 
 ## 硬件门槛
 

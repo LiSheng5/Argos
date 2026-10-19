@@ -2,7 +2,7 @@
 
     python -m argos.run --list-backends
     python -m argos.run --backend simulator --goal "去充电站" --episodes 3
-    python -m argos.run --backend simulator --lessons 待办/lessons.json   # 教训落盘
+    python -m argos.run --backend simulator --lessons lessons.json   # 教训落盘
     python -m argos.run --backend go2        # ← 会**如实报未实现**，不伪造
 
 设计要点
@@ -61,7 +61,7 @@ def build_backend(name: str, **kw):
         raise KeyError(
             f"没有名为 {name!r} 的 backend。当前可用：{known}。\n"
             f"  说明：{name!r} 尚未实现 —— 本项目**当前没有真实机器人硬件**，"
-            "也不会写一个假的真机 backend 来冒充完成。规划见 文档/ROADMAP.md。"
+            "也不会写一个假的真机 backend 来冒充完成。"
         )
     return BACKENDS[name](**kw)
 
@@ -78,7 +78,7 @@ def _route_topology(be):
     if world is None:
         raise NotImplementedError(
             "该 backend 没有提供路线拓扑：Planner 目前仍绑在 MiniWorld 上。"
-            "这是已知限制（见 文档/ROADMAP.md Wave 3），不在这里伪造。")
+            "这是已知限制，不在这里伪造。")
     return world
 
 

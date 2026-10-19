@@ -2,8 +2,8 @@
 
     python -m argos.benchmark list
     python -m argos.benchmark run   --scenario permanent_block_x5.0_northfirst --seed 42
-    python -m argos.benchmark all   --out 文档/BENCHMARK.md
-    python -m argos.benchmark sweep --out 文档/SWEEP.md      # 阈值/窗口/复核周期扫描
+    python -m argos.benchmark all   --out examples/benchmark.md
+    python -m argos.benchmark sweep --out examples/sweep.md      # 阈值/窗口/复核周期扫描
 
 全部在仿真里跑，不碰任何硬件。同 seed 结果可复现。
 """
